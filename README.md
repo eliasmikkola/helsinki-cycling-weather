@@ -1,6 +1,12 @@
 # Helsinki cycling volumes and weather conditions visualized with HTML Canvas and emojis
 
-This is a school project to visualize Helsinki cycling volumes and weather conditions visualized with HTML Canvas and emojis. The data was 
+This is a school project to visualize Helsinki cycling volumes and weather conditions visualized with HTML Canvas and emojis. The data sets are from:
+[Helsinki Region Infoshare](https://hri.fi/data/dataset//helsingin-pyorailijamaarat) 
+and 
+
+[Finnish Meteorological Institute](https://en.ilmatieteenlaitos.fi/download-observations).
+
+
 
 ## Recommended IDE Setup
 
