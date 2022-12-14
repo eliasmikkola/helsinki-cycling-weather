@@ -1,14 +1,10 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import Animation from './components/Animation.vue'
 </script>
 
 <template>
-  <header>
-      <HelloWorld msg="You did it!" />
-  </header>
-
-  <RouterView />
+  <Animation/>
 </template>
 
 <style scoped>

@@ -5,7 +5,8 @@
 import { onMounted } from '@vue/runtime-core'
 import merged_data from '../../merged_data.json'
 import { ref , watch, computed} from 'vue'
-
+import Datepicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 // all merged_data Date to yyyy mm dd
 const merged_data_date = merged_data.map((d) => {
   const date = new Date(d["Date"])
@@ -14,11 +15,6 @@ const merged_data_date = merged_data.map((d) => {
     date: `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`,
   }
 })
-
-
-
-
-
 
 
 
@@ -33,6 +29,9 @@ const merged_data_emoji = merged_data_date.map((d) => {
 
 console.log(merged_data_emoji[0]);
 
+const minDate = new Date(merged_data_date[0]['Date'])
+const maxDate = new Date(merged_data_date[merged_data_date.length - 1]['Date'])
+const date = ref(minDate)
 
 // create reactive variables from merged_data keys
 
@@ -48,8 +47,21 @@ const height_adjust = 200
 const canvas = document.createElement("canvas")
 canvas.width = 1200
 canvas.height = 1000
+// scale the canvas so that canwas width is equal to window width /2
+const windowWidth = window.innerWidth
 canvas.style.transform = 'rotateY(-180deg)'
+canvas.style.transform += `scale(${Math.min(0.5, windowWidth/1200)})`
+console.log(`scale(${Math.min(0.5, windowWidth/1200)})`)
 
+// window width as ref
+const windowWidthRef = ref(window.innerWidth)
+// watch window width
+watch(windowWidthRef, (newWidth) => {
+  canvas.style.transform = `scale(${Math.min(0.5, newWidth/1200)})`
+})
+
+
+canvas.style.marginRight =  '200px'
 document.body.appendChild(canvas)
 const roadsToFollow = [
   { x: 1000, y: height_adjust+300 },
@@ -583,9 +595,15 @@ onMounted(() => {
   //   data_index.value = (data_index.value + 1) % merged_data.length
   // }, 1000)
 })
-
+watch(date, (newDate) => {
+  //console.log("NEW DATE", newDate)
+  //console.log("haloo"merged_data[0]["Date"], new Date(newDate))
+  //console.log("INDEX OF", merged_data.findIndex((d) => new Date(d["Date"]).getDate() == new Date(newDate).getDate()));
+  data_index.value = merged_data.findIndex((d) => new Date(d["Date"]).getDate() == new Date(newDate).getDate())
+})
 watch(data_index, (newIndex) => {
   console.log("NEW INDEX", newIndex)
+  date.value = merged_data[newIndex]["Date"]
   cyclists.value = []
   clearInterval(drawInterval.value)
   drawCanvas(merged_data[newIndex])
@@ -608,14 +626,14 @@ watch(cyclistLenght, (newCyclists) => {
 <template>
   <div class="stats">
     <div class="greetings">
-      <b style="font-size: 80px;">Helsinki by Bike</b><br/>
+      <b style="font-size: 60px;">Helsinki by Bike</b><br/>
     </div>
     🗓: {{ selectedData["date"] }} <br/>
     🚲: {{ selectedData['Total Cyclists'] }}<br/>
     🌡: {{ selectedData['Air temperature (degC)'] }}°C <br/>
     <div>{{ selectedData['Precipitation amount (mm)'] > 0 ? (selectedData['Air temperature (degC)'] >= 0 ?  '🌧️: '+selectedData['Precipitation amount (mm)']+'mm' : '🌨: ' + selectedData['Precipitation amount (mm)']+'cm') : '🌤'}}</div>     
     <div>{{ selectedData['Snow depth (cm)'] < 0 ? '' : '❄️: ' +selectedData['Snow depth (cm)']+'cm' }}<br/></div>
-  
+    <Datepicker v-model="date" :min-date="minDate" :max-date="maxDate" />
     <input type="range" v-model="data_index" :min="0" :max="merged_data.length - 1" style="width: 30vw" /> 
   </div>
   
@@ -651,7 +669,7 @@ h3 {
 }
 .stats {
   position: relative;
-  font-size: 100px;
+  font-size: 50px;
   color: darkred;
 }
 
