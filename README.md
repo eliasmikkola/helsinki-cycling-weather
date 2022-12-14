@@ -1,6 +1,6 @@
-# visualization
+# Helsinki cycling volumes and weather conditions visualized with HTML Canvas and emojis
 
-This template should help get you started developing with Vue 3 in Vite.
+This is a school project to visualize Helsinki cycling volumes and weather conditions visualized with HTML Canvas and emojis. The data was 
 
 ## Recommended IDE Setup
 
